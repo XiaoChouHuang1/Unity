@@ -1,0 +1,120 @@
+1.	using UnityEngine;using System.Collections; 
+2.	using System.Xml;using System.Collections.Generic; 
+3.	/**xmlDocument*/public class xmlDO : MonoBehaviour     
+4.	public List<Person> ll = new List<Person> ();     
+5.	void Start()          //readXml ();      //readLL ();      //UpdateXML ();        //deleteXML ();       //addXml ();        addHead ();    }     
+6.	 void addHead()    {          
+7.	string path = Application.dataPath+"/MyPerson.xml";         
+8.	//Debug.Log (path);        //类名 ,新建一个对象         
+9.	XmlDocument doc=new XmlDocument();        
+10.	 //加载本地文本到doc中           
+11.	//load重载了四中放方法,xmldocment的参数只是其中的一种          
+12.	//doc.Load(path);          
+13.	XmlDeclaration des = doc.CreateXmlDeclaration ("1.0","utf-8",null);          
+14.	doc.AppendChild (des);          
+15.	doc.Save (path);     
+16.	 }      
+17.	void readXml()//拿到XML     
+18.	 {       //根据路径获取文件         
+19.	 //类名调用静态扩展方法,方法返回值为string类型的变量         
+20.	string path = Application.dataPath+"/MyPerson.xml";          
+21.	//Debug.Log (path);         
+22.	//类名 ,新建一个对象         
+23.	 XmlDocument doc=new XmlDocument();         
+24.	 //加载本地文本到doc中          
+25.	 //load重载了四中放方法,xmldocment的参数只是其中的一种         
+26.	doc.Load(path);         
+27.	 //获取根节点            返回值为节点                    string类型参数         
+28.	 XmlNode root= doc.SelectSingleNode ("Persons");         
+29.	//根据根节点得到所有子节点,作为一个集合          
+30.	XmlNodeList list=root.ChildNodes;         
+31.	//遍历得到所有节点          
+32.	foreach (XmlNode x in list)          
+33.	{           //遍历得到节点中的所有子节点             
+34.	 XmlNodeList property = x.ChildNodes;              
+35.	Person pp = new Person ();             
+36.	pp.id = int.Parse (property[0].InnerText);              
+37.	pp.name = property [1].InnerText;              
+38.	pp.age = int.Parse (property [2].InnerText);            
+39.	 pp.sex = property [3].InnerText;            
+40.	 pp.enjoy = property [4].InnerText;             
+41.	ll.Add (pp);             
+42.	 foreach (XmlNode p in property)             
+43.	  {                
+44.	 //属性名字 输出子节点的值    innertext是一个方法                 
+45.	 //Debug.Log (p.Name+":"+p.InnerText);           }        }    }      
+46.	void readLL()//查找    {          
+47.	Debug.Log (ll.Count);         
+48.	 Debug.Log (ll[0]);          
+49.	Debug.Log (ll[1]);    }      
+50.	void UpdateXML()//改变值    {         
+51.	 //获取文件的路径          
+52.	string path=Application.dataPath+"/MyPerson.xml";         
+53.	 //新建一个文件          
+54.	XmlDocument xd = new XmlDocument ();        
+55.	 //将text存入这个文件         
+56.	 xd.Load (path);         
+57.	//获取根节点         
+58.	 XmlNode root= xd.SelectSingleNode ("Persons");          
+59.	//获取根节点下的所有子节点存入list          
+60.	XmlNodeList xmllist = root.ChildNodes;       
+61.	  //获取根节点的第二个子节点        
+62.	 XmlNode xnlOne = xmllist [1];        
+63.	 //将第二个子节点的所有子节点存入list中        
+64.	 XmlNodeList pList = xnlOne.ChildNodes;         
+65.	//修改list中的第二个元素的值为0         
+66.	pList[2].InnerText="500000";          
+67.	//保存到text文件中        
+68.	 xd.Save(path);          
+69.	//输出修改后的值         
+70.	Debug.Log (pList[2].InnerText);         
+71.	 foreach (XmlNode x in pList)         {           Debug.Log (x.InnerText);        }    }    void deleteXML()//删除    {          
+72.	//根据路径获取文件         
+73.	//类名调用静态扩展方法,方法返回值为string类型的变量          
+74.	string path = Application.dataPath+"/MyPerson.xml";        
+75.	 //Debug.Log (path);          
+76.	//类名 ,新建一个对象         
+77.	 XmlDocument doc=new XmlDocument()         
+78.	 //加载本地文本到doc中         
+79.	//load重载了四中放方法,xmldocment的参数只是其中的一种       doc.Load(path);      
+80.	  //获取根节点            返回值为节点                    string类型参数        
+81.	 XmlNode root= doc.SelectSingleNode ("Persons");        XmlNodeList l = root.ChildNodes;        root.RemoveChild (l[1]);       doc.Save (path);   }     
+82.	 void addXml()  
+83.	//添加    {        
+84.	  //根据路径获取文件         
+85.	 //类名调用静态扩展方法,方法返回值为string类型的变量         
+86.	 string path = Application.dataPath+"/MyPerson.xml";          
+87.	//Debug.Log (path);          
+88.	//类名 ,新建一个对象        X  
+89.	mlDocument doc=new XmlDocument();          
+90.	//加载本地文本到doc中          
+91.	 //load重载了四中放方法,xmldocment的参数只是其中的一种         
+92.	 doc.Load(path);          
+93.	//获取根节点            返回值为节点                    string类型参数         
+94.	 XmlNode root= doc.SelectSingleNode ("Persons");          
+95.	XmlNodeList lll = root.ChildNodes;         
+96.	 /*        * person         * id   1888         * name 藏獒         * age  18         * sex  girl         * enjoy  吃屎      */         
+97.	 //创建一个元素名为person         
+98.	 XmlElement newPP = doc.CreateElement ("Person");          
+99.	//将元素person添加到根节点的下边         
+100.	 root.AppendChild (newPP);          
+101.	//新创建一个元素 id ,赋值为1888         
+102.	 XmlElement id = doc.CreateElement ("Id");          
+103.	id.InnerText="1888";          
+104.	//新建一个元素 名字为name          
+105.	XmlElement name = doc.CreateElement ("Name");         
+106.	name.InnerText="1888";          
+107.	XmlElement age = doc.CreateElement ("Age");         
+108.	age.InnerText="1888";          
+109.	XmlElement sex = doc.CreateElement ("Sex");          
+110.	sex.InnerText="1888";          
+111.	XmlElement enjoy = doc.CreateElement ("Enjoy");          
+112.	enjoy.InnerText="1888";          
+113.	//在元素的子节点添加以下节点          
+114.	newPP.AppendChild (id);          
+115.	newPP.AppendChild (name);          
+116.	newPP.AppendChild (age);          
+117.	newPP.AppendChild (sex);          
+118.	newPP.AppendChild (enjoy);          
+119.	//保存节点        doc.Save (path);    }}
+
