@@ -1,0 +1,23 @@
+1.	在项目制作中，我们有时不想用鼠标的默认箭头，想换一个炫一点的效果。  
+2.	（1）我们打开BuildSettings中的PlayerSettings，里面有一个Default Cursor的设置，我们先将一张图片的  
+3.	Texture Type设置为Cursor，然后将图片拖到Default Cursor里就可以了。  
+4.	（2）用代码实现  
+5.	using UnityEngine;  
+6.	using System.Collections;  
+7.	public class Crosshair : MonoBehaviour  
+8.	{  
+9.	public Texture2D crosshairTexture;//设置图标的图片  
+10.	void Start ()  
+11.	{  
+12.	Cursor.visible = false;  
+13.	}      
+14.	//通过每帧实时渲染出鼠标的图标  
+15.	void OnGUI ()  
+16.	{  
+17.	Vector3 mousePos = Input.mousePosition;       //这里面的设置根据需求来修改  
+18.	Rect pos = new Rect (mousePos.x - crosshairTexture.width * 0.5f, Screen.height - mousePos.y - crosshairTexture.height * 0.5f,                
+19.	crosshairTexture.width, crosshairTexture.height);  
+20.	GUI.DrawTexture (pos, crosshairTexture);  
+21.	}  
+22.	}  
+
