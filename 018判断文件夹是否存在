@@ -1,0 +1,75 @@
+1.	using System.Collections;  
+2.	using System.Collections.Generic;  
+3.	using System.IO;  
+4.	using UnityEngine;  
+5.	  
+6.	public class shanchu : MonoBehaviour {  
+7.	  
+8.	    string path= @"D:\\a2";  
+9.	  
+10.	    void Start () {  
+11.	  
+12.	    }  
+13.	  
+14.	    void Update () {  
+15.	        if (Input.GetKeyDown(KeyCode.Q))  
+16.	        {  
+17.	            if (!Directory.Exists(path))  
+18.	            {  
+19.	                Directory.CreateDirectory(path);  
+20.	                print("文件夹不存在,创建");  
+21.	            }  
+22.	            else  
+23.	            {  
+24.	                DirectoryInfo file1 = new DirectoryInfo(path);  
+25.	                deleteDirs(file1);  
+26.	                file1 = null;  
+27.	                print("文件夹存在,删除");  
+28.	            }  
+29.	        }  
+30.	    }  
+31.	  
+32.	  
+33.	  
+34.	  
+35.	    void deleteDirs(DirectoryInfo dirs)  
+36.	    {  
+37.	        if (dirs == null || (!dirs.Exists))  
+38.	        {  
+39.	            return;  
+40.	        }  
+41.	  
+42.	        DirectoryInfo[] subDir = dirs.GetDirectories();  
+43.	        if (subDir != null)  
+44.	        {  
+45.	            for (int i = 0; i < subDir.Length; i++)  
+46.	            {  
+47.	                if (subDir[i] != null)  
+48.	                {  
+49.	                    deleteDirs(subDir[i]);  
+50.	                }  
+51.	            }  
+52.	            subDir = null;  
+53.	        }  
+54.	  
+55.	        FileInfo[] files = dirs.GetFiles();  
+56.	        if (files != null)  
+57.	        {  
+58.	            for (int i = 0; i < files.Length; i++)  
+59.	            {  
+60.	                if (files[i] != null)  
+61.	                {  
+62.	                    Debug.Log("删除文件:" + files[i].FullName + "__over");  
+63.	                    files[i].Delete();  
+64.	                    files[i] = null;  
+65.	                }  
+66.	            }  
+67.	            files = null;  
+68.	        }  
+69.	  
+70.	        Debug.Log("删除文件夹:" + dirs.FullName + "__over");  
+71.	        dirs.Delete();  
+72.	    }  
+73.	  
+74.	}  
+
