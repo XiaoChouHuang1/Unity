@@ -1,0 +1,66 @@
+1.	using UnityEngine;  
+2.	using System.Collections;  
+3.	  
+4.	[RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]  
+5.	public class yy : MonoBehaviour {  
+6.	  
+7.	    public float Radius = 6;          //外半径    
+8.	    public float innerRadius = 3;     //内半径  
+9.	    public float angleDegree = 360;   //扇形或扇面的角度  
+10.	    public int Segments = 60;         //分割数    
+11.	  
+12.	    private MeshFilter meshFilter;  
+13.	  
+14.	    void Start()  
+15.	    {  
+16.	        meshFilter = GetComponent<MeshFilter>();  
+17.	        meshFilter.mesh = CreateMesh(Radius, innerRadius, angleDegree, Segments);  
+18.	    }  
+19.	  
+20.	    Mesh CreateMesh(float radius, float innerradius,float angledegree,int segments)  
+21.	    {  
+22.	        //vertices(顶点):  
+23.	        int vertices_count = segments* 2+2;              //因为vertices(顶点)的个数与triangles（索引三角形顶点数）必须匹配  
+24.	        Vector3[] vertices = new Vector3[vertices_count];         
+25.	        float angleRad = Mathf.Deg2Rad * angledegree;   //角度转弧度  
+26.	        float angleCur = angleRad;  
+27.	        float angledelta = angleRad / segments;//每个区间的  
+28.	        for(int i=0;i< vertices_count; i+=2)  
+29.	        {  
+30.	            float cosA = Mathf.Cos(angleCur);  
+31.	            float sinA = Mathf.Sin(angleCur);  
+32.	  
+33.	            vertices[i] = new Vector3(radius * cosA, 0, radius * sinA);  
+34.	            vertices[i + 1] = new Vector3(innerradius * cosA, 0, innerradius * sinA);  
+35.	            angleCur -= angledelta;  
+36.	        }  
+37.	  
+38.	        //triangles:  
+39.	        int triangle_count = segments * 6;  
+40.	        int[] triangles = new int[triangle_count];  
+41.	        for(int i=0,vi=0;i<triangle_count;i+=6,vi+=2)     
+42.	        {  
+43.	            triangles[i] = vi;  
+44.	            triangles[i + 1] = vi+3;  
+45.	            triangles[i + 2] = vi + 1;  
+46.	            triangles[i + 3] =vi+2;  
+47.	            triangles[i + 4] =vi+3;  
+48.	            triangles[i + 5] =vi;  
+49.	        }  
+50.	  
+51.	        //uv:  
+52.	        Vector2[] uvs = new Vector2[vertices_count];//二维向量数组  
+53.	        for (int i = 0; i < vertices_count; i++)  
+54.	        {  
+55.	            uvs[i] = new Vector2(vertices[i].x / radius / 2 + 0.5f, vertices[i].z / radius / 2 + 0.5f);  
+56.	        }  
+57.	  
+58.	        //负载属性与mesh  
+59.	        Mesh mesh = new Mesh();  
+60.	        mesh.vertices = vertices;  
+61.	        mesh.triangles = triangles;  
+62.	        mesh.uv = uvs;  
+63.	        return mesh;  
+64.	    }  
+65.	}  
+
