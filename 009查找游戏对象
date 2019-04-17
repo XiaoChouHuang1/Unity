@@ -1,0 +1,35 @@
+1.	using UnityEngine; 
+2.	using System.Collections; 
+3.	public class A1 : MonoBehaviour   
+4.	{    
+5.	  B1 bInstance = null;    
+6.	  void Start()  
+7.	{     
+8.	     GameObject go = GameObject.Find ("Player2");     
+9.	     bInstance = go.GetComponent<B1> ();      
+10.	     //1、?如何通过bInstance获取B所在的游戏对象        
+11.	     GameObject bb = bInstance.gameObject;     
+12.	     //2、?通过bInstance得到其挂载的游戏对象上的Transform组件    
+13.	     Transform tt = bInstance.transform;      
+14.	     //3、?得到bInstance所挂载的游戏对象上的某个脚本XScript    
+15.	     XScript xx = bInstance.GetComponent<XScript> ();      
+16.	     //4、?查找bInstance所挂载的游戏对象的子物体，名字为XX    
+17.	     GameObject ng = bInstance.transform.FindChild ("XX").gameObject; 
+18.	     //5、?得到bInstance所挂载的游戏对象的父亲  
+19.	     GameObject ngg = bInstance.transform.parent.gameObject;   
+20.	     //6、?隐藏bInstance所挂载的游戏对象  
+21.	     bInstance.gameObject.SetActive (false);      
+22.	     //7、?寻找bInstance所挂载的游戏对象的一个不知道多少层的子物体(已知子物体挂有名称为YScript的脚本)       
+23.	     GameObject cc = bInstance.GetComponentInChildren<YScript> ().gameObject;   
+24.	     //8、?给bInstance所挂在的游戏对象上添加一个子物体，名称为ZObjec    
+25.	     GameObject zz = (GameObject)Resources.Load ("Cube");      
+26.	     GameObject ZObject = Instantiate (zz, transform.position, transform.rotation) as GameObject;  
+27.	    //设置某个物体的父物体为..      
+28.	     ZObject.transform.parent = bInstance.transform;  
+29.	     //9、?给ZObject添加一个脚本RScript  
+30.	     ZObject.AddComponent<RScript> ();   
+31.	     //10、?2秒后删除Player2上的脚本B   
+32.	     Destroy (bInstance, 2.0f);   
+33.	}  
+34.	}
+
