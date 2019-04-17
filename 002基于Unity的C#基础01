@@ -1,0 +1,223 @@
+1.	FixUpdate——物理效果更新  
+2.	lateUpdate——相机追踪  
+3.	继承自MonoBehavior的所有类都可以当做组件  
+4.	#################  
+5.	Awake() 游戏对象一开始 在Start()方法之前会被调用  
+6.	用来做初始化操作  
+7.	比如在Start()方法中调用的一些方法需要的一些变量的初始化  
+8.	FixedUpdate() 物理引擎 以相同的时间间隔调用     
+9.	LateUpdate()  
+10.	OnDisable()  对象停用时执行  
+11.	Enbale() 对象勾选时执行  
+12.	OnDestroy() 对象销毁时执行   
+13.	##################  
+14.	Input.GetKey(KeyCode.)    获取键值 返回Boolean  
+15.	KeyCode  或 name:String  
+16.	( 枚 举 )    
+17.	Input.GetKeyDown()  
+18.	Input.GetKeyUp()  
+19.	按下时执行一次down() 若干次 getkey()  
+20.	弹起时只执行一次up()  
+21.	Awake ：在start 之前调用  适合做一些初始化的操作   
+22.	start:  
+23.	//以上两个方法 在整个生命周期内只执行一次  
+24.	Update:每帧都会被调用  
+25.	LateUpdate:  
+26.	FixedUpdate:  
+27.	Reset:  
+28.	Ondisable:在对象停用而不是销毁的时候会调用  
+29.	Enable:在勾选的时候 调用  
+30.	OnDestroy:  
+31.	if(Input.GetKey(KeyCode.X)  )  结果是一个布尔值  
+32.	Keycode本身是一个枚举  
+33.	使用 GetKey(KyeDown) 时 同时执行了  GetKey（KeyCode)  Up时候只执行 Up。  
+34.	Start和Awake在脚本的生命周期中只能运行一次,OnEnable和Ondisable会在脚本Hierarchy面板上激活和关闭时调用,一定要注意.  
+35.	GetButton (string);参数为string类型的name,在Edit-ProjectSettings中的Input中查看.  
+36.	注意OnMouse与OnMouseButton的区别,前者需要Collider.  
+37.	射线只会被有Collider的物体阻挡.  
+38.	改变物体的颜色:gameObject.renderer.material.color = Color.red;需要物体有Mesh Renderer组件.   
+39.	public属性不会暴露在Inspector面板中  
+40.	Input.GetKey之类的只能使用官方指定按键  
+41.	Inout.GetButton可以使用自制的按钮  
+42.	监视面板里出现的是公有的字段  
+43.	1.Input.GetButton()和Input.GetKey()方法：  
+44.	Input.GetButton()方法调用Edit->ProjectSetting-> Input下定义好的按钮(用户可以自己定义按钮来  调用)推荐使用这种方式来定义游戏的按钮  
+45.	Input.GetKey()只能调用定义好的键盘的keyCode值，在使用非pc平台时不推荐使用  
+46.	2.  在一次按下键盘下某个键的时候：  
+47.	Input.GetKey()方法会调用多次  
+48.	Input.GetKeyDown()方法只在键位按下时调用一次  
+49.	Input.GetKeyUp()方法只在键位弹起时调用一次  
+50.	3.MonoBehaviour类中：  
+51.	Awake()方法在Start()之前调用  
+52.	一般推荐使用Awake()方法来初始化数据  
+53.	4.OnMouseDown()：  
+54.	当物体没有碰撞器(Collider)时，该方法无法作用  
+55.	5.当物体没有添加Rigidbody(刚体)组件时，无法对物体施加力  
+56.	6.rigidbody.AddForce():为物体添加力  
+57.	rigidbody.useGravity:设置物体的重力效果  
+58.	7.gameObject：附加当前脚本的物体  
+59.	8.gameObject.renderer：获取/设置当前物体的渲染器  
+60.	9.gameObject.renderer.material：获取/设置当前物体的渲染器中的材质球  
+61.	gameObject.renderer.material.color:获取/设置当前物体的渲染器中的材质球中的颜色  
+62.	// 单例模式  
+63.	using UnityEngine;  
+64.	using System.Collections;    
+65.	public class GameManager : MonoBehaviour {    
+66.	private static GameManager _instance;    
+67.	public static GameManager Instance  
+68.	{  
+69.	get   
+70.	{  
+71.	if (null == _instance) {  
+72.	_instance = new GameObject ("GameManager").AddComponent<GameManager> ();  
+73.	return _instance;  
+74.	}  
+75.	}  
+76.	}    
+77.	void Awake(){  
+78.	if (Instance) {  
+79.	DontDestroyOnLoad (gameObject);  
+80.	} else {  
+81.	_instance = this;  
+82.	DontDestroyOnLoad (gameObject);  
+83.	}  
+84.	}  
+85.	}  
+86.	1.单例设计模式在游戏中的使用方式：  
+87.	当物体在场景切换时不被销毁，且只存在一个时建议使用单例模式  
+88.	实现思路：  
+89.	1).定义一个私有的字段  
+90.	2).提供静态的属性来返回该字段，在该属性get方法中判断该字段是否为null，然后判断是否创建该字段对应的对象，并将该对象返回  
+91.	3).DontDestroyOnLoad(GameObject):在切换场景时不销毁该对象,可以在Awake方法中进行判断该GamObject对象是否存在,确保该对象只存在一个  
+92.	Destroy():在场景消失  
+93.	Disable():变为灰色的 
+94.	activeself和activeinhe..   
+95.	activeSelf:自身  
+96.	activeInheirt:父对象的激活状态  
+97.	gameObject.transform=transform  
+98.	//当前脚本所挂在的游戏对象  
+99.	this.transfrom！=transform  
+100.	//this代表脚本（组件）本身  
+101.	this.脚本本身，非游戏对象本身  
+102.	transform.position=new Vector3(transform.position.x,Mathf.PingPong(Time.time,2),transform.position.z);  
+103.	transform.Roatate(0,90*Time.deltaTime,0);     
+104.	transfrom.localScale=new Vector3(Mathf.PingPong(Time.time,2),Mathf.PingPong(Time.time,2),Mathf.PingPong(Time.time,2));//本地缩放  
+105.	//Mathf.PingPong往返  
+106.	//Time.time
+107.	transform.Translate(Vector3.forward*speed*TIme.deltaTime  
+108.	Mathf.PingPong(Time.time,length)  
+109.	Translate  
+110.	Rotate    
+111.	Vector3.forward (0,0,1) 向前  
+112.	对着y轴 顺时针为正  
+113.	transform.Rotate()：旋转  
+114.	Mathf.PingPong():反复循环  
+115.	transform.localScale:设置transform的大小  
+116.	transform.Translate():移动  
+117.	Input.GetAxis(""):根据坐标轴名称返回坐标轴的值  
+118.	Mathf的三种用法：  
+119.	Mathf(float，float，(Time.deltaTime))；  
+120.	Lerp是Mathf结构体里的方法。指逐渐变化。  
+121.	Mathf.Lerp  
+122.	Vector3.Lerp  
+123.	Color.Lerp  
+124.	lerp  就是一个 先快后慢的 平滑处理     
+125.	颜色 大小 等等 都可以用     
+126.	lerp是个Mathf的方法     
+127.	三个参数  起始点数值  终点数值  时间间隔（即多少时间返回一次结果）     
+128.	lerp 就是在不断的返回数值，需要用相应的对象去接受  
+129.	延时  
+130.	private float waitTime = 1.0f;  
+131.	private float currentTime = 0.0f;  
+132.	void Update()  
+133.	{  
+134.	    if(currentTime>waitTime)  
+135.	    {  
+136.	        //功能代码  
+137.	        currentTime = 0;  
+138.	    }  
+139.	currentTime += Time.deltaTime;  
+140.	}
+141.	方法：
+142.	InvokeRepeating("方法",开始时间,频率【几秒一次】)  
+143.	唤醒或触发重复的操作,可以放在Start函数里
+144.	广播：通知多个游戏对象执行某方法  
+145.	BroadcastMessage("方法名",是否需要接受者)  
+146.	BroadcastMessage("方法名",参数,选项)  
+147.	一般不需要接受者 自己及子对象  
+148.	InvokeRepeating重复调用方法  
+149.	格式  
+150.	InvokeRepeating(methodName:string,time:float,repeatRate:float)  
+151.	在time秒调用methName方法；简单的说，根据时间调用制定方法名的方法  
+152.	从第一次调用开始 每隔repeatRate时间调用一次  
+153.	void Start(){  
+154.	StartCoroutine("MoveBoxs");  
+155.	}  
+156.	IEnumeraor MoveBoxs(){  
+157.	yield return new WaitForSeconds(1);  
+158.	foreach(var box in Boxs){  
+159.	while(box.tranform.position.y<MaxY){  
+160.	box.tranform.transform.Translate(_speedVector3*Time.deltaTime);  
+161.	}  
+162.	yield return null;//  
+163.	协同程序：相当于一个线程，可以俩个程序同时执行  
+164.	StartCoroutine(MoveBoxs()):的协同函数不能被StopCoroutine()函数停止。  
+165.	yield return null  等待下一帧  
+166.	yield return 0 等待下一帧  
+167.	yield return new waitforseconds(X)  
+168.	等待X秒  
+169.	先后顺序的操作：  
+170.	协同函数：  
+171.	Corouting  
+172.	Vector3.one = (1,1,1)  
+173.	返回值类型： IEnumerator    
+174.	IEnumerator MoveBox()  
+175.	{  
+176.	yield return new WaitForSeconds(1);//  
+177.	//yield return null;  
+178.	等待一秒后再执行下面的语句  
+179.	foreach(var variable in [])  
+180.	{  
+181.	while(box.transform.position.y<MaxY)  
+182.	{  
+183.	box.transform.Translate(_speedVector3.x * Time.deltaTime,_speedVector3.y*Time.deltaTime,_speedVector3.z*Time.deltaTime);  
+184.	}  
+185.	}   
+186.	}   
+187.	调用协同函数： StartCoroutine("方法名")或者方法  
+188.	如：  
+189.	StartCoroutine("MoveBox") 【建议】  
+190.	或  
+191.	StartCoroutine(MoveBox())  
+192.	取消协同函数：StopCoroutine("MoveBoxes") 只有一个重载 且只有用StartCoroutine("MoveBoxes")启动的协同函数才能这样被取消。  
+193.	using UnityEngine;  
+194.	using System.Collections;  
+195.	public class SimpleCoroutine : MonoBehaviour {  
+196.	/// <summary>  
+197.	/// Start, 协程的执行流程  
+198.	/// Start函数运行，输出“1”，然后开始协程Do；  
+199.	/// Do输出“2”，然后开始协程newDo；  
+200.	/// newDo输出“3”，产生中断指令后暂停，立即返回Do；  
+201.	/// Do产生中断指令后暂停，Do暂停并立即返回Start函数；  
+202.	/// Start执行StartCoroutine的下一条语句：输出“4”；  
+203.	/// 2秒后，newDo的中断指令完成并继续执行，输出“5”，协程newDo结束；  
+204.	/// Do的中断指令因为协程newDo的结束而完成并继续执行，输出“6”，协程Do结束。  
+205.	/// </summary>  
+206.	void Start () {  
+207.	Debug.Log("1");  
+208.	StartCoroutine(Do());  
+209.	Debug.Log("4");  
+210.	}  
+211.	IEnumerator Do() {  
+212.	Debug.Log("2");  
+213.	yield return StartCoroutine(newDo());//WaitForSeconds(5);  
+214.	Debug.Log("6");  
+215.	}  
+216.	IEnumerator newDo() {  
+217.	Debug.Log("3");  
+218.	yield return new WaitForSeconds(2);  
+219.	Debug.Log("5");  
+220.	}  
+221.	}  
+222.	//输出结果顺序是，1,2,3,4,5,6  
+
