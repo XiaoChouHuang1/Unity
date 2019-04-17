@@ -1,0 +1,120 @@
+1.	今天早上在一个项目里看到有个需求，在unity3d里面播放视频，一开始还以为很简单，殊不知从早上搞到现在，终于理清思路了。网上的资料五花八门，我就是因为太相信网上的资料，才导致走了这么多弯路、、、、，在此，我提供一下在unity播放视频的解决方案以及在实际操作时的注意事项，免得像我今天一样被蒙来蒙去，希望对你有帮助。  
+2.	  
+3.	一、unity播放视频方案：  
+4.	  
+5.	1、在游戏对象中利用movie texture播放  
+6.	  
+7.	unity支持的播放视频格式有.mov、.mpg、.mpeg、.mp4、.avi和.asf。  
+8.	  
+9.	首先，把符合以上格式的视频文件从外面“拖进”（记得是从电脑文件拖回unity,如果打开unity前就放在项目文件里，unity识别不了，我今天就是因为这个一直在转格式上转来转去，什么必须安装quicktime,什么格式转换工具等等，如果你真的需要转格式，有个工具还挺好用，你可以参考这个：http://blog.csdn.net/awnuxcvbn/article/details/17618919）unity的asset文件下（其他文件夹不行），unity自动把视频文件生成movie texture文件，如果视频中含有音频，会对应生成audio文件；  
+10.	  
+11.	然后，在场景中新建有renderer(material)的物体，如plane，为这个物体添加audio source和自定义的视频控制脚本playMovieTest.cs, 把导入的视频文件挂到脚本的Movie Texture处进行赋值。  
+12.	  
+13.	代码如下：  
+14.	  
+15.	  
+16.	[csharp] view plain copy  
+17.	using UnityEngine;    
+18.	using System.Collections;    
+19.	    
+20.	public class PlayMovieTest : MonoBehaviour    
+21.	{    
+22.	    // 电影纹理    
+23.	    public MovieTexture MovTexture;    
+24.	    
+25.	    // 视频屏幕大小    
+26.	    public float MovieSize = 1;    
+27.	    
+28.	    // Use this for initialization    
+29.	    void Start()    
+30.	    {    
+31.	        // 设置当前对象的主纹理为电影纹理    
+32.	        GetComponent<Renderer>().material.mainTexture = MovTexture;    
+33.	        // 设置电影纹理播放模式为循环模式    
+34.	        MovTexture.loop = true;    
+35.	    }    
+36.	        
+37.	    // Update is called once per frame    
+38.	    void Update()    
+39.	    {    
+40.	        transform.localScale = new Vector3(MovieSize,1,1);    
+41.	    }    
+42.	    
+43.	    /// <summary>    
+44.	    /// 播放视频    
+45.	    /// </summary>    
+46.	    public void PlayMovie()    
+47.	    {    
+48.	        if (!MovTexture.isPlaying)    
+49.	        {    
+50.	            MovTexture.Play();    
+51.	        }    
+52.	    }    
+53.	    
+54.	    /// <summary>    
+55.	    /// 暂停视频    
+56.	    /// </summary>    
+57.	    public void PauseMovie()    
+58.	    {    
+59.	        MovTexture.Pause();    
+60.	    }    
+61.	    
+62.	    /// <summary>    
+63.	    /// 停止视频    
+64.	    /// </summary>    
+65.	    public void StopMovie()    
+66.	    {    
+67.	        MovTexture.Stop();    
+68.	    }    
+69.	}    
+70.	  
+71.	最后，运行测试，本人用.mp4格式测试，可以用。  
+72.	  
+73.	  
+74.	以上方式只能在pc使用，若在移动端android/ios中，一定要把视频文件放在StreamingAssets文件夹下，然后直接把下面的脚本挂在摄像机上，即可。  
+75.	  
+76.	  
+77.	[csharp] view plain copy  
+78.	using UnityEngine;    
+79.	using System.Collections;    
+80.	    
+81.	public class MobilePlayMovieTest : MonoBehaviour    
+82.	{    
+83.	    void OnGUI()    
+84.	    {    
+85.	        // 视频播放时，触摸屏幕视频关闭    
+86.	        if (GUI.Button(new Rect(20, 10, 200, 50), "PLAY ControlMode.CancelOnTouch"))    
+87.	        {    
+88.	            Handheld.PlayFullScreenMovie("mobileMovieTest.mp4", Color.black, FullScreenMovieControlMode.CancelOnInput);    
+89.	        }    
+90.	    
+91.	        // 视频播放时，弹出IOS高级控件，控制视频暂停/播放、全屏等    
+92.	        if (GUI.Button(new Rect(20, 90, 200, 25), "PLAY ControlMode.Full"))    
+93.	        {    
+94.	            Handheld.PlayFullScreenMovie("mobileMovieTest.mp4", Color.black, FullScreenMovieControlMode.Full);    
+95.	        }    
+96.	    
+97.	        // 视频播放时，无法停止，当其播放完一次后自动关闭    
+98.	        if (GUI.Button(new Rect(20, 170, 200, 25), "PLAY ControlMode.Hidden"))    
+99.	        {    
+100.	            Handheld.PlayFullScreenMovie("mobileMovieTest.mp4", Color.black, FullScreenMovieControlMode.Hidden);    
+101.	        }    
+102.	    
+103.	        // 视频播放时弹出IOS高级控件，可控制播放进度    
+104.	        if (GUI.Button(new Rect(20, 250, 200, 25), "PLAY ControlMode.Minimal"))    
+105.	        {    
+106.	            Handheld.PlayFullScreenMovie("mobileMovieTest.mp4", Color.black, FullScreenMovieControlMode.Minimal);    
+107.	        }    
+108.	    }    
+109.	}    
+110.	  
+111.	2、利用easy movie texture插件处理  
+112.	  
+113.	这个插件收费，里面的具体处理方式我没仔细看，用到可以用的。注意这个插件只能在android/ios中使用，在pc或编辑器不可用。  
+114.	  
+115.	  
+116.	  
+117.	参考：  
+118.	  
+119.	http://www.xuanyusong.com/archives/1019  
+
