@@ -1,0 +1,23 @@
+1.	1、EasyTouch之摇杆  
+2.	    使用方法：导入插件，点击菜单中的HedeghogTeam->EasyTouch->Extension->Adding a new Joystick->修改摇杆的Joystick axes properties & events->Interaction type为event Notification->脚本编写代码  
+3.	注意:设置事件通知在摇杆里     设置摇杆的名字    参数movingjoystick  的轴    lookat朝向,已经有一个固定的方向,此时只需要vec3.forward就可以了     
+4.	2、EasyTouch之按键  
+5.	    使用方法：导入插件，点击菜单中的HedeghogTeam->EasyTouch->Extension->Adding a new Button->脚本编写代码  
+6.	注意：当场景消失，把注册的事件进行移除(-=)  
+7.	天空盒  
+8.	1、给相机挂载天空盒，仅仅某个相机展示了自定义的天空盒，整个场景不发生改变，如果切换相机，新的相机中将展示原来的天空盒，需要重新添加  
+9.	     方法：点击相机->AddComponent->SkyBox->选择天空  
+10.	2、给场景挂载天空盒，让整个场景展示自定义的天空盒。切换相机不需要重新添加  
+11.	    方法：点击Window->Lighting->Scene->选择天空盒  
+12.	自定义天空盒：在Project中点击右键－>Create->Material->点击Shader后面的下拉->SkyBox->6 side->设置6个方向的图片保存->用上述两种方法进行设置天空盒  
+13.	相机属性 *****  
+14.	Clear Flags : 背景墙显示的模式  
+15.	Culling Mask : 设置相机渲染的层级(看见哪一层)  
+16.	Projection : 相机投射方式(3D和2D效果)  
+17.	Field Of View : 相机视野大小  
+18.	Clipping Planes : 相机投射最小和最大距离  
+19.	ViewportRect : 以多大比例在Game视图中显示内容  
+20.	Depth : 深度，控制相机的渲染顺序，数值越大，最后渲染  
+21.	Rendering Path : 设置渲染路径(不需要更改)  
+22.	Target Texture : 设置相机投射的目标  
+
