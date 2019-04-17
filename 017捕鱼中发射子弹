@@ -1,0 +1,94 @@
+1.	using System.Collections;  
+2.	using System.Collections.Generic;  
+3.	using UnityEngine;  
+4.	/// <summary>  
+5.	/// 控制手枪的旋转  
+6.	///   
+7.	/// 控制子弹的生成  
+8.	///   
+9.	/// 控制子弹的移动  
+10.	/// </summary>  
+11.	public class GunManager : MonoBehaviour {  
+12.	    //枪击音效  
+13.	    private AudioSource gunAudio;  
+14.	    //手枪在X,Y方向上旋转的最大值和最小值  
+15.	    private float maxYRotation = 120;  
+16.	    private float minYRotation = 0;  
+17.	    private float maxXRotion = 60;  
+18.	    private float minXRotation = 0;  
+19.	    //射击的间隔时长  
+20.	    private float shootTime = 1;  
+21.	    //射击间隔时间计时器  
+22.	    private float shootTimer = 0;  
+23.	    //子弹的游戏物体  
+24.	    public GameObject bulletGO;  
+25.	    //子弹的生成位置  
+26.	    public Transform firePos;  
+27.	  
+28.	    // Use this for initialization  
+29.	    void Awake () {  
+30.	        gunAudio = gameObject.GetComponent<AudioSource>();  
+31.	    }  
+32.	  
+33.	    // Update is called once per frame  
+34.	    void Update()  
+35.	    {  
+36.	        //游戏非暂停状态下，射击并且枪随鼠标旋转  
+37.	        if(GameManager._instance.isPaused == false)  
+38.	        {  
+39.	            shootTimer += Time.deltaTime;  
+40.	            if(shootTimer >= shootTime)  
+41.	            {  
+42.	                //射击  
+43.	                if(Input.GetMouseButtonDown(0))  
+44.	                {  
+45.	                    //实例化，生成子弹  
+46.	                    GameObject bullectCurrent = GameObject.Instantiate(bulletGO, firePos.position, Quaternion.identity);  
+47.	                    //给子弹添加一个正前方向上的力，向前运动  
+48.	                    bullectCurrent.GetComponent<Rigidbody>().AddForce(transform.forward * 2200);  
+49.	                    //射击时手枪动画  
+50.	                    gameObject.GetComponent<>().Play();  
+51.	                    shootTimer = 0;  
+52.	                    //播放  
+53.	                    gunAudio.Play();  
+54.	                    //UI显示射击数  
+55.	                    UIManager.instance.AddShootNum();  
+56.	                }  
+57.	            }  
+58.	            //获得鼠标的相对位置  
+59.	            float xPosPrecent = Input.mousePosition.x / Screen.width;  
+60.	            float yPosPrecent = Input.mousePosition.y / Screen.height;  
+61.	            //x，y角度计算  
+62.	            float xAngle = -Mathf.Clamp(yPosPrecent * maxXRotion, minXRotation, maxXRotion) + 15;  
+63.	            float yAngle = Mathf.Clamp(xPosPrecent * maxYRotation, minYRotation, maxYRotation) - 60;  
+64.	            //赋值，手枪旋转  
+65.	            transform.eulerAngles = new Vector3  
+66.	                (xAngle, yAngle, 0);  
+67.	        }  
+68.	    }   
+69.	}
+70.	
+71.	
+72.	
+73.	 
+74.	using System.Collections;  
+75.	using System.Collections.Generic;  
+76.	using UnityEngine;  
+77.	/// <summary>  
+78.	/// 子弹销毁  
+79.	/// </summary>  
+80.	public class BulletManager : MonoBehaviour {  
+81.	  
+82.	    // Use this for initialization  
+83.	    void Start () {  
+84.	        StartCoroutine(DestoryBullet());  
+85.	    }  
+86.	    //2秒后销毁子弹  
+87.	    IEnumerator DestoryBullet()  
+88.	    {  
+89.	        yield return new WaitForSeconds(2);  
+90.	        Destroy(this.gameObject);  
+91.	    }  
+92.	} 
+93.	 
+94.	
