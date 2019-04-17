@@ -1,0 +1,44 @@
+1.	using UnityEngine;  
+2.	using System.Collections;  
+3.	public class AB : MonoBehaviour {  
+4.	    /* 
+5.	    //invoke:调用方法(一次，重复) 
+6.	    void Start(){ 
+7.	        Invoke ("func", 3.0f); 
+8.	        //InvokeRepeating ("func", 5.0f, 1.0f); 
+9.	    } 
+10.	    private void func(){ 
+11.	        //产生敌人 
+12.	        Debug.Log ("a"); 
+13.	        Destroy (this.gameObject); 
+14.	    } 
+15.	    */  
+16.	    //GameObject : 游戏物体  
+17.	    public GameObject prefab;  
+18.	    void Awake(){  
+19.	        //1要创建的物体  
+20.	        //2物体的位置  
+21.	        //3物体的旋转角度  
+22.	        GameObject newObj = Instantiate (prefab, transform.position, transform.rotation) as GameObject;  
+23.	        //给游戏对象添加组件  
+24.	        newObj.AddComponent<NewObjectScript> ();  
+25.	    }  
+26.	    void Update(){  
+27.	        //this.gameObject.transform.Translate (new Vector3 (0, 1*Time.deltaTime, 0));  
+28.	        //this.gameObject.transform.Rotate (new Vector3 (0, 360*Time.deltaTime, 0));  
+29.	  
+30.	        //Time:时间  
+31.	        //两帧Update之间的时间间隔  
+32.	        //Debug.Log (Time.deltaTime);  
+33.	  
+34.	        //Update总时间长度  
+35.	        //Debug.Log (Time.time);   
+36.	  
+37.	        //FixedUpdate时间间隔  
+38.	        //Debug.Log (Time.fixedDeltaTime);   
+39.	  
+40.	        //FixedUpdate总时间长度  
+41.	        //Debug.Log (Time.fixedTime);   
+42.	    }  
+43.	}  
+
