@@ -1,0 +1,125 @@
+用协程实现一个字符串逐个显示的效果，说白了就是字体一个一个往外冒出的效果。
+首先是读一段字符串，程序开始后利用协成将字符串逐个显示，如果点击按钮，暂停协成，并显示所有字符串，代码如下：
+
+using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+public class StartGameCtrl : MonoBehaviour
+
+{
+    GameObject btn;
+
+    /// <summary>
+
+    /// 要显示文本的组件
+
+    /// </summary>
+
+    Text text;
+
+    //要显示的所有字符串
+
+    string str = "仙剑奇侠传是由台湾大宇资讯集团原创制作的著名中文角色扮演游戏系列 以中国古代的仙妖神鬼传说为背景题材 目前全系列共有八部作品。";
+
+    //每次显示的字符串
+
+    string s = "";
+
+ 
+
+    void Start()
+
+    {
+
+        text = transform.Find("Text").GetComponent<Text>();
+
+        btn = transform.Find("Button").gameObject;
+
+        EventListener.Get(btn).onClick = ShowAllText;
+
+        PlayText();
+
+    }
+
+    /// <summary>
+
+    /// 调用协成实现一个字一个字冒出的效果
+
+    /// </summary>
+
+    private void PlayText()
+
+    {
+
+        Debug.Log(str.Length);
+
+        StartCoroutine(ShowText(str.Length));
+
+    }
+
+    IEnumerator ShowText(int strLength)
+
+    {
+
+        int i = 0;
+
+        while (i < strLength)
+
+        {
+
+            yield return new WaitForSeconds(0.05f);
+
+            s += str[i].ToString();
+
+            text.text = s;
+
+            i += 1;
+
+        }
+
+            //显示完成，停止所有协成
+
+            StopAllCoroutines();
+
+    }
+
+    /// <summary>
+
+    /// 显示所有字符串，暂停协成
+
+    /// </summary>
+
+    /// <param name="go"></param>
+
+    void ShowAllText(PointerEventData go)
+
+    {
+
+        if (s == str)
+
+        {
+
+            //写显示完之后的逻辑
+
+        }
+
+        else
+
+        {
+
+            //停止所有协成，直接显示所有字符串
+
+            StopAllCoroutines();
+
+            //没显示完，点击之后就显示完了
+
+        }
+
+        s = str;
+
+        text.text = s;
+
+    }
+
+}
