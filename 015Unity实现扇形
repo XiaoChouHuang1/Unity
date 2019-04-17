@@ -1,0 +1,68 @@
+1.	方法一、 
+2.	public int n;//绘制点的个数 
+3.	    public float r;//半径  
+4.	    void OnDrawGizmos()  
+5.	{  
+6.	    //萌呆瞎  
+7.	    Gizmos.color=Color.red;  
+8.	    Vector3 center = new Vector3 (0, 0, 0);//绘制的中心点  
+9.	    float r = 2;//半径为2   
+10.	    int count = 50 + 1;//数组元素个数  
+11.	    float rad = 180;//绘制的角度  
+12.	    Vector3[] points = new Vector3[count];//数组  
+13.	    points [0] = Vector3.zero;//第一个点，  
+14.	    points [count - 1] = points [0];//最后一个  构成  
+15.	    float angle = rad / (count - 1);//每一份的角度一个循环  
+16.	    //从第一个点开始赋值  
+17.	    for (int i = 1; i < count - 1; i++)   
+18.	    {                                       //递减的变化 //围绕Y轴 相当于vector。forward  
+19.	        Quaternion q = Quaternion.AngleAxis (angle * (i - 1), new Vector3 (0, 1, 0));  
+20.	        Debug.Log (q.eulerAngles);  
+21.	        Vector3 to = (q * Vector3.forward) * r;//一定角度，将其转化为单位向量*半径可以得到想要的半径  
+22.	        points [i] = to;//存入数组  
+23.	    }  
+24.	    for (int i = 0; i < count - 1; i++)   
+25.	    {  
+26.	        Gizmos.DrawLine (points [i], points [i + 1]);//绘制  
+27.	    }  
+28.	}  
+29.	方法二、
+30.	int  n = 16;//绘制的点的数量  
+31.	        float   r = 2;//绘制的半径  
+32.	        float x;//向量的xz  
+33.	        float y;  
+34.	        void OnDrawGizmos(){  
+35.	        Vector3 [] list = new Vector3[n] ;//一个向量列表存储n个向量  
+36.	        for (int i = 0; i < n; i++)//循环  
+37.	        {  
+38.	            //弧度转角度  
+39.	  
+40.	            //360 =2pi弧度   180度等于pi弧度  
+41.	            //180/pi  =每弧度对应的角度       *弧度等于角度  
+42.	            //pi/180=每角度对应的弧度         *角度得到弧度  
+43.	            //Mathf.Deg2Rad 每角度对应的弧度    
+44.	            //     绘制180范围的扇形 将其分为n-1份  乘以递增变量转化为弧度   
+45.	            //乘半径 得出180弧度上不同的点  
+46.	        x = Mathf.Sin((180f*i/(n-1)) *Mathf.Deg2Rad)*r;  //半径*sin得出x  
+47.	        y = Mathf.Cos((180f*i/(n-1))*Mathf.Deg2Rad)*r;   //半径*cos得出y  
+48.	        list[i] = new Vector3 (x,0,y);//列表中添加元素  
+49.	        }  
+50.	              
+51.	        Gizmos.color = Color.red;//红色  
+52.	        for (int i = 0; i < list.Length-1; i++)   
+53.	        {  
+54.	            Gizmos.DrawLine(list[i],list[i+1] );//绘制扇形边缘的两点间的线段  
+55.	        }  
+56.	  
+57.	        //从原点开始绘制， 两条边线  
+58.	        Gizmos.color = Color.green;  
+59.	        Gizmos.DrawLine (new Vector3(0,0,0),list[list.Length-1]);  
+60.	        Gizmos.color = Color.black;  
+61.	        Gizmos.DrawLine (list[0],new Vector3(0,0,0));  
+62.	  
+63.	        //测试  
+64.	        Gizmos.color = Color.green;  
+65.	        Gizmos.DrawLine (new Vector3(0,0,0),new Vector3(-2,0,-2));  
+66.	        }*/  
+67.	
+
