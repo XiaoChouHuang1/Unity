@@ -1,0 +1,18 @@
+1.	方法一：使用Material方式来制作。  
+2.	优点：简单省内存。  
+3.	图片导入到Unity中之后，Texture Type使用Texture。如果图片是透明的话，那么勾选Alpha Is Transparency，Wrap Mode更改为Repeat。  
+4.	之后创建一个Material，如果图片是透明的，则Shader选为Unlit/Transparent，如果不是的话，使用Mobile/Diffuse即可。  
+5.	接下来，创建一个Quad，将材质球拖上去，然后再挂个脚本，脚本里的Update里加一句话即可：  
+6.	MR.material.mainTextureOffset += new Vector2(Time.deltaTime * moveSpeed * 0.02f, 0);  
+7.	方法二：两个Sprite进行无限循环。  
+8.	优点：如果你在做2D游戏，而且需要使其他Sprite与背景保持同等速度会很方便。例如一个无限循环的陆地，上面会随机生成树、石头等，而树和石头需要与陆地保持同样的速度移动。  
+9.	创建两个Sprite，一个默认position为0，另一个则是0加上图片的宽度，一般Pixel Per Unit为100，图片宽度为2048像素，则第二章图片的x为20.48。  
+10.	两个Sprite都挂上一个Move脚本，脚本里的Update加几行代码即可：  
+11.	transform.Translate(Vector3.left * Time.deltaTime * speed);  
+12.	if (transform.position.x < -20.48f)  
+13.	{  
+14.	    transform.position += new Vector3(20.48f * 2, 0, 0);  
+15.	}  
+16.	两个方式各有优势，方式一只需要创建一张图片，而方式二需要两张，但是方式二在很常用，至于选择哪个，就看项目的具体需求了。  
+17.	希望本分享对你有所帮助！  
+
