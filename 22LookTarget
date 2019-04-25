@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+public class UILookAtTarget : MonoBehaviour
+{
+
+    public Transform Target;//目标点
+    private Transform Aim;//发射点
+    private Transform Trigger;//触发器
+    void OnEnable()
+    {
+        Aim = this.transform.Find("Canvas");
+        Trigger = this.transform.Find("触发器");
+    }
+
+    private void Update()
+    {
+        if (Target != null)
+        {
+            if ((Aim.position - Target.position).sqrMagnitude <= 4)
+            {
+                Aim.gameObject.SetActive(true);
+                Trigger.gameObject.SetActive(true);
+                Vector3 dir = Aim.position - Target.position;
+                Quaternion rot = Quaternion.LookRotation(dir);
+                dir = rot.eulerAngles;
+                transform.localEulerAngles = new Vector3(0, dir.y, 0);
+            }
+            else
+            {
+                Aim.gameObject.SetActive(false);
+                Trigger.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            Debug.LogError("Target不能为空！！");
+        }
+    }
+
+    public void TextsendToGlobalData() 
+    {
+        CaseLibrary_KCCaseSX.TrainingName = this.transform.Find("Canvas/Text").GetComponent<Text>().text;
+        Debug.Log("成功点击"+CaseLibrary_KCCaseSX.TrainingName);
+    }
+}
