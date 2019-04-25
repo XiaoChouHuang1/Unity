@@ -1,0 +1,158 @@
+using UnityEngine;
+using System.Collections;
+
+/// <summary>
+/// Follow相机，对象必须有Collider
+/// </summary>
+public class FollowCamera : MonoBehaviour
+{
+    //public bool CameraIsLock = false;     //相机是否锁定  
+    public GameObject target;               //目标对象
+    public float distanceDefault = 1.5f;    //默认距离
+    float distance = 5f;
+    public float rotationDamping = 8.0f;    //旋转阻尼
+    public float lookHeight = 0.75f;        //视角高度
+    public float sensitivity = 3F;          //灵敏度
+    public float rotationX = -90f;          //沿X轴的旋转度
+    public float rotationY = 20F;           //沿Y轴的旋转度
+
+    public float scrollSpeed = 1;           //相机视野缩放系数
+    private Vector3 offsetPosition;         //位置偏移
+
+    //mouse down tag;
+    private bool bMouseDownR = false;
+
+    //目标大小
+    Vector3 targetSize;
+
+    //锁定标记
+    bool isLock = false;
+    
+    void Start()
+    {
+        if(target==null)
+            target = transform.parent.GetComponentInChildren<KongChengActor>().GetActiveActorItem().gameObject;
+        //
+        if (target != null)
+        {
+            SetTarget(target);
+        }
+    }
+
+    //使用时需要首先调用，设置控制的角色对象
+    public void SetTarget(GameObject tag)
+    {
+        targetSize = target.GetComponentInChildren<SkinnedMeshRenderer>().bounds.size;
+        Collider collider = target.GetComponent<BoxCollider>();
+        if (collider != null) targetSize = collider.bounds.size;
+
+        collider = target.GetComponent<CapsuleCollider>();
+        if (collider != null) targetSize = collider.bounds.size;
+
+        collider = target.GetComponent<SphereCollider>();
+        if (collider != null) targetSize = collider.bounds.size;
+
+        collider = target.GetComponent<MeshCollider>();
+        if (collider != null) targetSize = collider.bounds.size;
+
+        offsetPosition = transform.position - target.transform.position;
+    }
+
+    public GameObject GetTarget()
+    {
+        if (target != null)
+        {
+            return target;
+        }
+        else
+        {
+            Debug.LogError("目标对象为空！");
+            return null;
+        }
+    }
+
+    void Update()
+    {
+        if (target == null || isLock)
+        {
+            return;
+        }
+
+        DragRotate(); //视角旋转
+        SightDistance();//视距的缩放  
+    }
+
+    //中键滑轮拉远拉近  
+    void SightDistance()
+    {
+        distanceDefault = offsetPosition.magnitude;//得到偏移向量的长度
+        distanceDefault += Input.GetAxis("Mouse ScrollWheel") * -scrollSpeed;//获取鼠标中键*相机视野缩放系数
+        distanceDefault = Mathf.Clamp(distanceDefault, 1f, 2f);//限定距离最小及最大值
+        offsetPosition = offsetPosition.normalized * distanceDefault;//更新位置偏移
+    }
+
+    void DragRotate()
+    {
+        //check mouse down
+        if (Input.GetMouseButtonDown(1) && UICamera.isOverUI == false)
+        {
+            bMouseDownR = true;
+        }
+        else if (Input.GetMouseButtonUp(1) && UICamera.isOverUI == false)
+        {
+            bMouseDownR = false;
+        }
+
+        if (bMouseDownR)
+        {
+            rotationX -= Input.GetAxis("Mouse X") * sensitivity;
+            rotationY -= Input.GetAxis("Mouse Y") * sensitivity;
+            if (rotationY < -10)
+            {
+                rotationY = -10;
+            }
+            if (rotationY > 40)
+            {
+                rotationY = 40;
+            }
+        }
+        float wantedDx = distance * Mathf.Cos(rotationY * Mathf.PI / 180) * Mathf.Cos(rotationX * Mathf.PI / 180);
+        float wantedDy = distance * Mathf.Sin(rotationY * Mathf.PI / 180);
+        float wantedDz = distance * Mathf.Cos(rotationY * Mathf.PI / 180) * Mathf.Sin(rotationX * Mathf.PI / 180);
+
+        // Always look at the target
+        Vector3 target_final = new Vector3(target.transform.position.x, target.transform.position.y + targetSize.y * lookHeight
+                       , target.transform.position.z);
+
+        Vector3 wantePosition = new Vector3(target_final.x + wantedDx, target_final.y + wantedDy, target_final.z + wantedDz);
+        Vector3 currentPosition = transform.position;
+        currentPosition = Vector3.Lerp(currentPosition, wantePosition, rotationDamping * Time.deltaTime);
+        transform.position = currentPosition;
+
+        //
+        RaycastHit hit;
+        if (Physics.Raycast(new Ray(target_final, (transform.position - target_final).normalized), out hit))
+        {
+            if (!hit.collider.isTrigger)
+            {
+                distance = Vector3.Distance(hit.point, target_final) - 0.2f;
+            }
+        }
+        else
+        {
+            distance = distanceDefault;
+        }
+        if (distance > distanceDefault)
+        {
+            distance = distanceDefault;
+        }
+
+        Debug.DrawRay(target_final, transform.position - target_final, Color.red);    //画射线    
+        transform.LookAt(target_final);
+    }
+
+    public void CameraLock(bool isLock)
+    {
+        this.isLock = isLock;
+    }
+}
