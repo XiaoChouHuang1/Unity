@@ -1,0 +1,68 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class UguiPlaySound : MonoBehaviour ,IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+{
+    public AudioClip AudioClip;
+    public enum Trigger
+    {
+        OnEnable,
+        OnClick,
+        OnMouseOver,
+        OnMouseOut,
+    }
+    public Trigger trigger = Trigger.OnClick;
+    private AudioSource m_AudioSource;
+    void Start()
+    {
+        m_AudioSource = this.transform.GetComponent<AudioSource>();
+        if (m_AudioSource == null)
+        {
+            m_AudioSource = this.transform.gameObject.AddComponent<AudioSource>();
+            m_AudioSource.playOnAwake = false;
+        }
+    }
+
+    void OnEnable()
+    {
+        if (trigger == Trigger.OnEnable)
+        {
+            this.PlayAudio(AudioClip);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {   
+        if (trigger == Trigger.OnClick)
+        {
+            this.PlayAudio(AudioClip);
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (trigger == Trigger.OnMouseOver)
+        {
+            this.PlayAudio(AudioClip);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (trigger == Trigger.OnMouseOut)
+        {
+            this.PlayAudio(AudioClip);
+        }
+    }
+
+    private void PlayAudio(AudioClip ac)
+    {
+        if (ac == null)
+        {
+            //Debug.LogError(this.name + ":audioClip is Null !");
+        }
+        this.m_AudioSource.PlayOneShot(ac);
+    }
+}
