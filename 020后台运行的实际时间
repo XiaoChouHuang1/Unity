@@ -1,0 +1,37 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class TimeFilter
+{
+    private static float _startTime;//初始时间
+    public static float StartTime
+    {
+        get { return _startTime; }
+       private set { _startTime = value;}
+    }
+    private static int _needTime;//从开始到结束使用的时间
+
+    public static int NeedTime
+    {
+        get { return _needTime; }
+        private set { _needTime = value; }
+    }
+    /// <summary>
+    /// 开始时间记录,在进入课程的时候使用
+    /// </summary>
+
+    public static void InitialTime()
+    {
+        _startTime = Time.realtimeSinceStartup;
+        _needTime = 0;
+    }
+    /// <summary>
+    /// 从开始到结束使用的时间
+    /// </summary>
+    public static void FinishTime()
+    {
+        _needTime = Mathf.CeilToInt(Time.realtimeSinceStartup- _startTime);
+    }
+}
