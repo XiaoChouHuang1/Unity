@@ -1,0 +1,6 @@
+//Ngui
+//获取鼠标点击物体的物体
+  GameObject Obj = UICamera.selectedObject;
+
+//Ugui
+  GameObject Obj=EventSystem.current.currentSelectedGameObject;
